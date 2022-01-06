@@ -1,0 +1,18 @@
+on:
+  workflow_call:
+    inputs:
+      tag: 
+        type: string
+
+jobs:
+  do-something-reusable-1:
+    runs-on: ubuntu-latest
+
+    steps:
+    - run: echo "Hello"
+  
+  do-something-reusable-2:
+    runs-on: ubuntu-latest
+
+    steps:
+    - run: echo "Nice to meet you!"
