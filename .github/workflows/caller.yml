@@ -3,8 +3,6 @@ on:
 
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
 
   workflow_dispatch:
 jobs:
@@ -22,5 +20,3 @@ jobs:
           echo test, and deploy your project.
   call-workflow:
     uses: ChJL/workflow-test/.github/workflows/reusable_called.yml@main
-    with:
-      tag: $GITHUB_RUN_NUMBER
