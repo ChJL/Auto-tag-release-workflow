@@ -1,8 +1,5 @@
 on:
   workflow_call:
-    inputs:
-      tag: 
-        type: string
 
 jobs:
   do-something-reusable-1:
