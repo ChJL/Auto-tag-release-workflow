@@ -42,7 +42,7 @@ jobs:
       - name: "Build & test"
         run: |
           echo "done!"
-          echo ${{ needs.createdtag.outputs.tagname }}
+          echo ${{ needs.create-tag.outputs.tagname }}
 
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
