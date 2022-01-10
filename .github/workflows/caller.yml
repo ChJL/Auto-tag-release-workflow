@@ -32,29 +32,22 @@ jobs:
         GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         tag_prefix: "v"
   
-  auto-release:
-    needs: 
-      - call-workflow
-      - create-tag
-    name: "Tagged Release"
-    runs-on: "ubuntu-latest"
+#   auto-release:
+#     needs: 
+#       - call-workflow
+#       - create-tag
+#     name: "Tagged Release"
+#     runs-on: "ubuntu-latest"
 
-    steps:
-#       - name: Get release version
-#         run: echo "ReleaseVersion=${ReleaseVersion}" >> $GITHUB_ENV
-      - name: "Build & test"
-        run: |
-          echo "done!"
-          echo ${{ needs.createdtag.outputs.tagname }}
+#     steps:
+#       - name: "Build & test"
+#         run: |
+#           echo "done!"
+#           echo ${{ needs.createdtag.outputs.tagname }}
 
-      - uses: "marvinpinto/action-automatic-releases@latest"
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          prerelease: false
-          automatic_release_tag: ${{ needs.createdtag.outputs.tagname }}
-
-#           files: |
-#             LICENSE.txt
-#             *.jar
-      
+#       - uses: "marvinpinto/action-automatic-releases@latest"
+#         with:
+#           repo_token: "${{ secrets.GITHUB_TOKEN }}"
+#           prerelease: false
+#           automatic_release_tag: ${{ needs.createdtag.outputs.tagname }}
   
