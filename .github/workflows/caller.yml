@@ -14,11 +14,12 @@ jobs:
       - name: Run a one-line script
         run: echo The line in original workflow.
 
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+#       - name: Run a multi-line script
+#         run: |
+#           echo Add other actions to build,
+#           echo test, and deploy your project.
   call-workflow:
+    needs: original
     uses: ChJL/workflow-test/.github/workflows/reusable_called.yml@main
 
   tagged-release:
