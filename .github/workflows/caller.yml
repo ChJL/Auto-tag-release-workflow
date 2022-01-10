@@ -36,8 +36,8 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: false
           automatic_release_tag: latest
-          files: |
-            LICENSE.txt
-            *.jar
+#           files: |
+#             LICENSE.txt
+#             *.jar
       
   
