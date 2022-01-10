@@ -21,13 +21,16 @@ jobs:
   call-workflow:
     needs: original
     uses: ChJL/workflow-test/.github/workflows/reusable_called.yml@main
-
+  
   tagged-release:
+    needs: call-workflow
     name: "Tagged Release"
     runs-on: "ubuntu-latest"
 
     steps:
-      # ...
+      - name: Get release version
+        run: echo "ReleaseVersion=${ReleaseVersion}" >> $GITHUB_ENV
+  
       - name: "Build & test"
         run: |
           echo "done!"
@@ -36,7 +39,8 @@ jobs:
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: false
-          automatic_release_tag: latest
+          automatic_release_tag: ${{ env.ReleaseVersion }}
+          title: ${{ env.ReleaseVersion }}
 #           files: |
 #             LICENSE.txt
 #             *.jar
