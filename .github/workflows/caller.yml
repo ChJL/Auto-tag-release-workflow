@@ -61,6 +61,7 @@ jobs:
         run: |
           echo "Got tag name ${{ steps.tag_version.outputs.new_ta }}"
           echo "Got release version ${{ steps.tag_version.outputs.new_version }}"
+          echo "Got previous version ${{ steps.tag_version.outputs.previous_tag }}"
       
       - name: Create a GitHub release
         uses: ncipollo/release-action@v1
