@@ -40,10 +40,10 @@ jobs:
 #     runs-on: "ubuntu-latest"
 
 #     steps:
-    - name: "Build & test"
+    - name: "Build & test & try tagsha"
       run: |
+        echo ${{ steps.autotag.outputs.tagsha }}
         echo "done!"
-        echo ${{ steps.autotag.outputs.tagname }}
 
     - uses: "marvinpinto/action-automatic-releases@latest"
       with:
