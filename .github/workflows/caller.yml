@@ -60,13 +60,13 @@ jobs:
       
       - name: Check Output Parameters
         run: |
-          echo "Got tag name ${{ steps.tag_version.outputs.new_ta }}"
+          echo "Got tag name ${{ steps.tag_version.outputs.new_tag }}"
           echo "Got release version ${{ steps.tag_version.outputs.new_version }}"
           echo "Got previous version ${{ steps.tag_version.outputs.previous_version }}"
           echo "Got previous tag ${{ steps.tag_version.outputs.previous_tag }}"
       
       - name: Create a GitHub release
-        if: ${{ steps.tag_version.outputs.new_ta }}
+        if: ${{ steps.tag_version.outputs.new_tag }}
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ steps.tag_version.outputs.new_tag }}
