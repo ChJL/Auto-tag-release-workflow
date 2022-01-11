@@ -65,6 +65,7 @@ jobs:
           echo "Got previous version ${{ steps.tag_version.outputs.previous_version }}"
           echo "Got previous tag ${{ steps.tag_version.outputs.previous_tag }}"
           echo "Got release type ${{ steps.tag_version.outputs.release_type }}"
+          echo "Got changelog ${{ steps.tag_version.outputs.changelog }}"
       
       - name: Create a GitHub release
         if: ${{ steps.tag_version.outputs.new_tag }}
