@@ -66,6 +66,7 @@ jobs:
           echo "Got previous tag ${{ steps.tag_version.outputs.previous_tag }}"
       
       - name: Create a GitHub release
+        if: ${{ steps.tag_version.outputs.new_ta }}
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ steps.tag_version.outputs.new_tag }}
