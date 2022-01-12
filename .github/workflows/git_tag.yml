@@ -6,22 +6,22 @@ on:
     outputs:
       new_tag:
         description: 'New tag created by the workflow.'
-        value: ${{ steps.tag_version.outputs.new_tag }}
+        value: ${{ jobs.dash-create-tag.outputs.new_tag }}
       release_version:
         description: 'Release version going to be created.'
-        value: ${{ steps.tag_version.outputs.new_tag }}
+        value: ${{ jobs.dash-create-tag.outputs.new_version }}
       previous_version:
         description: 'Previous version created.'
-        value: ${{ steps.tag_version.outputs.new_tag }}
+        value: ${{ jobs.dash-create-tag.outputs.previous_version }}
       previous_tag:
         description: 'Previous tag created.'
-        value: ${{ steps.tag_version.outputs.new_tag }}
+        value: ${{ jobs.dash-create-tag.outputs.previous_tag }}
       release_type:
         description: 'Type of release created.'
-        value: ${{ steps.tag_version.outputs.new_tag }}
+        value: ${{ jobs.dash-create-tag.outputs.release_type }}
       changelog:
         description: 'Release changelog.'
-        value: ${{ steps.tag_version.outputs.new_tag }}
+        value: ${{ jobs.dash-create-tag.outputs.changelog }}
 
 jobs:
   dash-create-tag:
