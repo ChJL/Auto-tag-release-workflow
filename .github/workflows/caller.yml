@@ -53,7 +53,6 @@ jobs:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
     uses: ChJL/workflow-test/.github/workflows/git_tag.yml@main
 
- 
   check-tag-name:
     needs: create-new-tag
     runs-on: ubuntu-latest
@@ -67,6 +66,15 @@ jobs:
           echo "Got release type ${{ needs.create-new-tag.outputs.release_type }}"
           echo "Got changelog ${{ needs.create-new-tag.outputs.changelog }}"
           
+  delete-tag:
+     needs: create-new-tag
+     runs-on: ubuntu-latest
+     steps:
+      - name: delete tag command
+        run: |
+          git push --delete origin ${{ needs.create-new-tag.outputs.new_tag }}
+        
+     
   create-release:
     needs: create-new-tag
     uses: ChJL/workflow-test/.github/workflows/git_release.yml@main
