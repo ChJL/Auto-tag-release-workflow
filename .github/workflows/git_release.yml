@@ -1,0 +1,26 @@
+on:
+  workflow_call:
+    secrets:
+      GH_TOKEN:
+        required: true
+    inputs:
+      TAG:
+        type: string
+        required: true
+      CHANGELOG:
+        type: string
+        required: true
+
+jobs:
+  dash-create-tag:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v2
+      - name: Create a GitHub release
+        if: ${{ inputs.TAG }}
+        # Only if we have new tag(version), release the new version.
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ inputs.TAG }}
+          name: Release ${{ inputs.TAG }}
