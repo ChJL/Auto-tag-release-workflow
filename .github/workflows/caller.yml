@@ -70,8 +70,12 @@ jobs:
      needs: create-new-tag
      runs-on: ubuntu-latest
      steps:
-      - name: delete tag command
-        run: |
+     - name: checkout
+       uses: actions/checkout@v2.4.0
+       with:
+          token: ${{ secrets.GH_TOKEN }}
+     - name: delete tag command
+       run: |
           git push --delete origin ${{ needs.create-new-tag.outputs.new_tag }}
         
      
