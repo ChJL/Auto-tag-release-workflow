@@ -53,6 +53,20 @@ jobs:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
     uses: ChJL/workflow-test/.github/workflows/git_tag.yml@main
 
+ 
+  check-tag-name:
+    needs: create-new-tag
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Output Parameters
+        run: |
+          echo "Got tag name ${{ needs.create-new-tag.outputs.new_tag }}"
+          echo "Got release version ${{ needs.create-new-tag.outputs.new_version }}"
+          echo "Got previous version ${{ needs.create-new-tag.outputs.previous_version }}"
+          echo "Got previous tag ${{ needs.create-new-tag.outputs.previous_tag }}"
+          echo "Got release type ${{ needs.create-new-tag.outputs.release_type }}"
+          echo "Got changelog ${{ needs.create-new-tag.outputs.changelog }}"
+          
   create-release:
     needs: create-new-tag
     uses: ChJL/workflow-test/.github/workflows/git_release.yml@main
