@@ -47,32 +47,17 @@ on:
   push:
     branches: [ main ]
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Bump version and push tag
-        id: tag_version
-        uses: mathieudutour/github-tag-action@v6.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          default_bump: false 
-          # set to false, to avoid releasing without any fix, feature. So the new_tag will be none. 
-      
-      - name: Check Output Parameters
-        run: |
-          echo "Got tag name ${{ steps.tag_version.outputs.new_tag }}"
-          echo "Got release version ${{ steps.tag_version.outputs.new_version }}"
-          echo "Got previous version ${{ steps.tag_version.outputs.previous_version }}"
-          echo "Got previous tag ${{ steps.tag_version.outputs.previous_tag }}"
-          echo "Got release type ${{ steps.tag_version.outputs.release_type }}"
-          echo "Got changelog ${{ steps.tag_version.outputs.changelog }}"
-      
-      - name: Create a GitHub release
-        if: ${{ steps.tag_version.outputs.new_tag }}
-        # Only if we have new tag(version), release the new version.
-        uses: ncipollo/release-action@v1
-        with:
-          tag: ${{ steps.tag_version.outputs.new_tag }}
-          name: Release ${{ steps.tag_version.outputs.new_tag }}
-          body: ${{ steps.tag_version.outputs.changelog }}
+  create-new-tag:
+    name: 'create_tags'
+    secrets:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+    uses: ChJL/workflow-test/.github/workflows/git_tag.yml@main
+
+  create-release:
+    needs: create-new-tag
+    uses: ChJL/workflow-test/.github/workflows/git_tag.yml@main
+    secrets:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+    with:
+      TAGS: ${{ needs.create-new-tag.outputs.new_tag }}
+      CHANGELOG: ${{ needs.create-new-tag.outputs.changelog }}
