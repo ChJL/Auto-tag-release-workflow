@@ -7,26 +7,29 @@ on:
       new_tag:
         description: 'New tag created by the workflow.'
         value: ${{ jobs.dash-create-tag.outputs.new_tag }}
-      release_version:
-        description: 'Release version going to be created.'
-        value: ${{ jobs.dash-create-tag.outputs.new_version }}
-      previous_version:
-        description: 'Previous version created.'
-        value: ${{ jobs.dash-create-tag.outputs.previous_version }}
+#       release_version:
+#         description: 'Release version going to be created.'
+#         value: ${{ jobs.dash-create-tag.outputs.new_version }}
+#       previous_version:
+#         description: 'Previous version created.'
+#         value: ${{ jobs.dash-create-tag.outputs.previous_version }}
       previous_tag:
         description: 'Previous tag created.'
         value: ${{ jobs.dash-create-tag.outputs.previous_tag }}
-      release_type:
-        description: 'Type of release created.'
-        value: ${{ jobs.dash-create-tag.outputs.release_type }}
+#       release_type:
+#         description: 'Type of release created.'
+#         value: ${{ jobs.dash-create-tag.outputs.release_type }}
       changelog:
         description: 'Release changelog.'
         value: ${{ jobs.dash-create-tag.outputs.changelog }}
 
 jobs:
-  dash-create-tag:
+  create-tag:
     runs-on: ubuntu-latest
-    environment: production
+    outputs:
+      new_tag: ${{ steps.tag_version.outputs.new_tag }}
+      previous_tag: ${{ steps.tag_version.outputs.previous_tag }}
+      changelog: ${{ steps.tag_version.outputs.changelog }}
     steps:
       - uses: actions/checkout@v2
       - name: Bump version and push tag
