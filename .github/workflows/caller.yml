@@ -55,7 +55,7 @@ jobs:
 
   create-release:
     needs: create-new-tag
-    uses: ChJL/workflow-test/.github/workflows/git_tag.yml@main
+    uses: ChJL/workflow-test/.github/workflows/git_release.yml@main
     secrets:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
     with:
