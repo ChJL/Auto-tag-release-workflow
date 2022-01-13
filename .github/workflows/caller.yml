@@ -21,18 +21,20 @@ jobs:
           echo "Got previous tag ${{ needs.create-new-tag.outputs.previous_tag }}"
           echo "Got release type ${{ needs.create-new-tag.outputs.release_type }}"
           echo "Got changelog ${{ needs.create-new-tag.outputs.changelog }}"
-          
-  delete-tag:
-     needs: create-new-tag
-     runs-on: ubuntu-latest
-     steps:
-     - name: checkout
-       uses: actions/checkout@v2.4.0
-       with:
-          token: ${{ secrets.GH_TOKEN }}
-     - name: delete tag command
-       run: |
-          git push --delete origin ${{ needs.create-new-tag.outputs.new_tag }}
+
+#   # This section can be used when you want to delete the tag
+#   # Remember to set the condition (e.g. if: )
+#   delete-tag:
+#      needs: create-new-tag
+#      runs-on: ubuntu-latest
+#      steps:
+#      - name: checkout
+#        uses: actions/checkout@v2.4.0
+#        with:
+#           token: ${{ secrets.GH_TOKEN }}
+#      - name: delete tag command
+#        run: |
+#           git push --delete origin ${{ needs.create-new-tag.outputs.new_tag }}
         
      
   create-release:
