@@ -25,6 +25,7 @@ jobs:
   # This section can be used when you want to delete the tag
   # Remember to set the condition (e.g. if: )
   delete-tag:
+     if: ${{ needs.create-new-tag.outputs.new_tag }}
      needs: create-new-tag
      runs-on: ubuntu-latest
      steps:
@@ -41,7 +42,7 @@ jobs:
     needs:
       - create-new-tag
       - delete-tag
-    if: "${{ needs.create-new-tag.outputs.new_tag }} && (needs.dash-delete-tag.outputs.job_status == 'failure')"
+    if: "${{ needs.create-new-tag.outputs.new_tag }} && (needs.delete-tag.outputs.job_status == 'failure')"
     uses: ChJL/workflow-test/.github/workflows/git_release.yml@main
     secrets:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
