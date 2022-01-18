@@ -41,8 +41,7 @@ jobs:
   create-release:
     needs:
       - create-new-tag
-      - delete-tag
-    if: "${{ needs.create-new-tag.outputs.new_tag }} && (needs.delete-tag.outputs.job_status == 'cancelled')"
+    if: "${{ needs.create-new-tag.outputs.new_tag }} && (jobs.delete-tag.outputs.job_status == 'cancelled')"
     uses: ChJL/workflow-test/.github/workflows/git_release.yml@main
     secrets:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
