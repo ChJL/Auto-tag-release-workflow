@@ -21,6 +21,26 @@ jobs:
           echo "Got previous tag ${{ needs.create-new-tag.outputs.previous_tag }}"
           echo "Got release type ${{ needs.create-new-tag.outputs.release_type }}"
           echo "Got changelog ${{ needs.create-new-tag.outputs.changelog }}"
+  pytype:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [3.7]
+        poetry-version: [latest]
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2.4.0
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          submodules: recursive
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Setup Poetry
+        uses: abatilo/actions-poetry@v2.1.4
+        with:
+          poetry-version: ${{ matrix.poetry-version }}
 
 #   # This section can be used when you want to delete the tag
 #   # Remember to set the condition (e.g. if: )
