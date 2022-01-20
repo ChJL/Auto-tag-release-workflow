@@ -37,7 +37,16 @@ jobs:
 #        run: |
 #           git push --delete origin ${{ needs.create-new-tag.outputs.new_tag }}
         
-     
+  update-toml:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Edit Toml
+        uses: ciiiii/toml-editor@1.0.0
+        with:
+          file: "./pyproject.toml"
+          key: "version"
+          value: "needs.create-new-tag.outputs.new_version"
+  
   create-release:
     needs:
       - create-new-tag
