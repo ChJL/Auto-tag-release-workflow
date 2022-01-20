@@ -60,12 +60,18 @@ jobs:
         run: git status
       - name: stage changed files
         run: git add .
-      - name: commit changed files
-        run: git commit -m "Bump version in pyproject.toml"
+      - name: Commit files
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git commit -m "Bump version in pyproject.toml" -a
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GH_TOKEN }}
+          branch: ${{ github.ref }}
       - name: check for changes
         run: git status
-      - name: push the change
-        run: git push
         
   # This section can be used when you want to delete the tag
   # Remember to set the condition (e.g. if: )
