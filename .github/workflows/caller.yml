@@ -38,6 +38,8 @@ jobs:
 #           git push --delete origin ${{ needs.create-new-tag.outputs.new_tag }}
         
   update-toml:
+    needs: create-new-tag
+    if: ${{ needs.create-new-tag.outputs.new_tag }}
     runs-on: ubuntu-latest
     steps:
       - name: Edit Toml
