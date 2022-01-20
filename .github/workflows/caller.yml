@@ -43,7 +43,7 @@ jobs:
           poetry-version: ${{ matrix.poetry-version }}
       - name: Update poetry version
         run: |
-          pip self update
+          poetry self update
 
 #   # This section can be used when you want to delete the tag
 #   # Remember to set the condition (e.g. if: )
