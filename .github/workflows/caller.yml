@@ -26,7 +26,7 @@ jobs:
       fail-fast: false
       matrix:
         python-version: [3.7]
-        poetry-version: [latest]
+        poetry-version: [1.1.11]
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
@@ -41,6 +41,9 @@ jobs:
         uses: abatilo/actions-poetry@v2.1.4
         with:
           poetry-version: ${{ matrix.poetry-version }}
+      - name: Update poetry version
+        run: |
+          pip self update
 
 #   # This section can be used when you want to delete the tag
 #   # Remember to set the condition (e.g. if: )
