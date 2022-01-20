@@ -50,7 +50,7 @@ jobs:
           value: "needs.create-new-tag.outputs.new_version"
   
   create-release:
-    needs: |
+    needs:
       - update-toml
       - create-new-tag
     if: ${{ needs.create-new-tag.outputs.new_tag }}
