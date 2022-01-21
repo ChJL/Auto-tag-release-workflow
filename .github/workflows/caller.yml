@@ -23,7 +23,7 @@ jobs:
           echo "Got changelog ${{ needs.create-new-tag.outputs.changelog }}"
 
 
-#   # This section can be used when you want to delete the tag
+# # # This section can be used when you want to delete the tag
 #   # Remember to set the condition (e.g. if: )
 #   delete-tag:
 #      needs: create-new-tag
