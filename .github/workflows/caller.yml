@@ -48,6 +48,7 @@ jobs:
   update-toml:
     needs: 
       - create-new-tag
+      - delete-tag
     if: ${{ needs.create-new-tag.outputs.new_tag }}
     runs-on: ubuntu-latest
     steps:
@@ -86,6 +87,7 @@ jobs:
      - name: create tag command
        run: |
           git tag  ${{ needs.create-new-tag.outputs.new_tag }}
+          git push origin ${{ needs.create-new-tag.outputs.new_tag }}
 
   create-release:
     needs:
