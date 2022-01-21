@@ -24,7 +24,7 @@ jobs:
 
 
 # # # This section can be used when you want to delete the tag
-#   # Remember to set the condition (e.g. if: )
+# # # Remember to set the condition (e.g. if: )
 #   delete-tag:
 #      needs: create-new-tag
 #      runs-on: ubuntu-latest
