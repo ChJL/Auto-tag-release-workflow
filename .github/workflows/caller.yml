@@ -3,7 +3,15 @@ on:
   push:
     branches: [ main ]
 jobs:
+  check-actor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: check actor
+        run: |
+          echo "Get Github Actor: " ${{github.actor}}
+    
   create-new-tag:
+    needs: check-actor
     name: 'create_tags'
     secrets:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
