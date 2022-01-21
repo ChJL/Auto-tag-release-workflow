@@ -31,35 +31,24 @@ jobs:
           echo "Got changelog ${{ needs.create-new-tag.outputs.changelog }}"
 
 
-# # # This section can be used when you want to delete the tag
-# # # Remember to set the condition (e.g. if: )
-#   delete-tag:
-#      needs: create-new-tag
-#      runs-on: ubuntu-latest
-#      steps:
-#      - name: checkout
-#        uses: actions/checkout@v2.4.0
-#        with:
-#           token: ${{ secrets.GH_TOKEN }}
-#      - name: delete tag command
-#        run: |
-#           git push --delete origin ${{ needs.create-new-tag.outputs.new_tag }}
-
-  create-release:
-    needs:
-      - create-new-tag
-      - update-toml
-    if: ${{ needs.create-new-tag.outputs.new_tag }}
-    uses: ChJL/workflow-test/.github/workflows/git_release.yml@main
-    secrets:
-      GH_TOKEN: ${{ secrets.GH_TOKEN }}
-    with:
-      TAG: ${{ needs.create-new-tag.outputs.new_tag }}
-      CHANGELOG: ${{ needs.create-new-tag.outputs.changelog }}
+# # This section can be used when you want to delete the tag
+# # Remember to set the condition (e.g. if: )
+  delete-tag:
+     needs: create-new-tag
+     runs-on: ubuntu-latest
+     steps:
+     - name: checkout
+       uses: actions/checkout@v2.4.0
+       with:
+          token: ${{ secrets.GH_TOKEN }}
+     - name: delete tag command
+       run: |
+          git push --delete origin ${{ needs.create-new-tag.outputs.new_tag }}
 
   update-toml:
     needs: 
       - create-new-tag
+      - delete-tag
     if: ${{ needs.create-new-tag.outputs.new_tag }}
     runs-on: ubuntu-latest
     steps:
@@ -86,6 +75,25 @@ jobs:
           author_email: 41898282+github-actions[bot]@users.noreply.github.com
           message: 'Bump version in pyproject.toml'
           add: '.'
+
+  create-new-tag2:
+    needs: update-toml
+    name: 'create_tag2'
+    secrets:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+    uses: ChJL/workflow-test/.github/workflows/git_tag.yml@main
+
+  create-release:
+    needs:
+      - create-new-tag2
+      - update-toml
+    if: ${{ needs.create-new-tag2.outputs.new_tag }}
+    uses: ChJL/workflow-test/.github/workflows/git_release.yml@main
+    secrets:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+    with:
+      TAG: ${{ needs.create-new-tag2.outputs.new_tag }}
+      CHANGELOG: ${{ needs.create-new-tag2.outputs.changelog }}
 
 #  # another way for commit and push
 #       - name: stage changed files
