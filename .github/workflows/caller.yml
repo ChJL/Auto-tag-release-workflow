@@ -36,9 +36,22 @@ jobs:
 #      - name: delete tag command
 #        run: |
 #           git push --delete origin ${{ needs.create-new-tag.outputs.new_tag }}
-        
+
+  create-release:
+    needs:
+      - create-new-tag
+    if: ${{ needs.create-new-tag.outputs.new_tag }}
+    uses: ChJL/workflow-test/.github/workflows/git_release.yml@main
+    secrets:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+    with:
+      TAG: ${{ needs.create-new-tag.outputs.new_tag }}
+      CHANGELOG: ${{ needs.create-new-tag.outputs.changelog }}
+
   update-toml:
-    needs: create-new-tag
+    needs: 
+      - create-new-tag
+      - create-release
     if: ${{ needs.create-new-tag.outputs.new_tag }}
     runs-on: ubuntu-latest
     steps:
@@ -73,30 +86,3 @@ jobs:
       - name: check for changes
         run: git status
         
-  # This section can be used when you want to delete the tag
-  # Remember to set the condition (e.g. if: )
-  delete-tag:
-     needs: 
-      - create-new-tag
-      - update-toml
-     runs-on: ubuntu-latest
-     steps:
-     - name: checkout
-       uses: actions/checkout@v2.4.0
-       with:
-          token: ${{ secrets.GH_TOKEN }}
-     - name: delete tag command
-       run: |
-          git push --delete origin ${{ needs.create-new-tag.outputs.new_tag }}
-
-#   create-release:
-#     needs:
-#       - update-toml
-#       - create-new-tag
-#     if: ${{ needs.create-new-tag.outputs.new_tag }}
-#     uses: ChJL/workflow-test/.github/workflows/git_release.yml@main
-#     secrets:
-#       GH_TOKEN: ${{ secrets.GH_TOKEN }}
-#     with:
-#       TAG: ${{ needs.create-new-tag.outputs.new_tag }}
-#       CHANGELOG: ${{ needs.create-new-tag.outputs.changelog }}
