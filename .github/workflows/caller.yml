@@ -77,7 +77,9 @@ jobs:
           add: '.'
 
   create-tag-by-command:
-     needs: update-toml
+     needs: 
+       - update-toml
+       - create-new-tag
      runs-on: ubuntu-latest
      steps:
      - name: checkout
