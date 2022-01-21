@@ -65,8 +65,8 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v2.4.0
-        with:
-          token: ${{ secrets.GH_TOKEN }}
+#         with:
+#           token: ${{ secrets.GH_TOKEN }}
       - name: run pwd ls
         run: |
           pwd
