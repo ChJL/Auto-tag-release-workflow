@@ -94,6 +94,7 @@ jobs:
   create-release:
     needs:
       - create-tag-by-command
+      - create-new-tag
     if: ${{ needs.create-new-tag.outputs.new_tag }}
     uses: ChJL/workflow-test/.github/workflows/git_release.yml@main
     secrets:
