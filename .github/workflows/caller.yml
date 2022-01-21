@@ -79,18 +79,25 @@ jobs:
           value: ${{ needs.create-new-tag.outputs.new_version }}
       - name: check for changes
         run: git status
-      - name: stage changed files
-        run: git add .
-      - name: Commit files
-        run: |
-          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git commit -m "Bump version in pyproject.toml" -a
-      - name: Push changes
-        uses: ad-m/github-push-action@master
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v8
         with:
-          github_token: ${{ secrets.GH_TOKEN }}
-          branch: ${{ github.ref }}
-      - name: check for changes
-        run: git status
+          author_name: GitHub Actions
+          author_email: 41898282+github-actions[bot]@users.noreply.github.com
+          message: 'Bump version in pyproject.toml'
+          add: '.'
+#       - name: stage changed files
+#         run: git add .
+#       - name: Commit files
+#         run: |
+#           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+#           git config --local user.name "github-actions[bot]"
+#           git commit -m "Bump version in pyproject.toml" -a
+#       - name: Push changes
+#         uses: ad-m/github-push-action@master
+#         with:
+#           github_token: ${{ secrets.GH_TOKEN }}
+#           branch: ${{ github.ref }}
+#       - name: check for changes
+#         run: git status
         
