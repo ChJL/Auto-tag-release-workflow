@@ -9,6 +9,13 @@ jobs:
       - name: check actor
         run: |
           echo "Get Github Actor: " ${{github.actor}}
+  check-commit-message:
+   runs-on: ubuntu-latest
+   steps:
+     - name: Run commit tests
+       if: contains(github.event.head_commit.message, 'check commit')
+       run: |
+         echo 'Running check commit test!'
     
   create-new-tag:
     needs: check-actor
@@ -31,77 +38,77 @@ jobs:
           echo "Got changelog ${{ needs.create-new-tag.outputs.changelog }}"
 
 
-# This section can be used when you want to delete the tag
-# Remember to set the condition (e.g. if: )
-  delete-tag:
-     needs: create-new-tag
-     runs-on: ubuntu-latest
-     steps:
-     - name: checkout
-       uses: actions/checkout@v2.4.0
-       with:
-          token: ${{ secrets.GH_TOKEN }}
-     - name: delete tag command
-       run: |
-          git push --delete origin ${{ needs.create-new-tag.outputs.new_tag }}
-
-  update-toml:
-    needs: 
-      - create-new-tag
-      - delete-tag
-    if: ${{ needs.create-new-tag.outputs.new_tag }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: checkout
-        uses: actions/checkout@v2.4.0
-#         with:
+# # This section can be used when you want to delete the tag
+# # Remember to set the condition (e.g. if: )
+#   delete-tag:
+#      needs: create-new-tag
+#      runs-on: ubuntu-latest
+#      steps:
+#      - name: checkout
+#        uses: actions/checkout@v2.4.0
+#        with:
 #           token: ${{ secrets.GH_TOKEN }}
-      - name: run pwd ls
-        run: |
-          pwd
-          ls -a
-      - name: edit Toml
-        uses: ciiiii/toml-editor@1.0.0
-        with:
-          file: "pyproject.toml"
-          key: "tool.poetry.version"
-          value: ${{ needs.create-new-tag.outputs.new_version }}
-      - name: check for changes
-        run: git status
-      - name: Commit changes
-        uses: EndBug/add-and-commit@v8
-        with:
-          author_name: GitHub Actions
-          author_email: 41898282+github-actions[bot]@users.noreply.github.com
-          message: 'Bump version in pyproject.toml'
-          add: '.'
+#      - name: delete tag command
+#        run: |
+#           git push --delete origin ${{ needs.create-new-tag.outputs.new_tag }}
 
-  create-tag-by-command:
-     needs: 
-       - update-toml
-       - create-new-tag
-     runs-on: ubuntu-latest
-     steps:
-     - name: checkout
-       uses: actions/checkout@v2.4.0
-       with:
-          token: ${{ secrets.GH_TOKEN }}
-     - name: create tag command
-       run: |
-          git tag  ${{ needs.create-new-tag.outputs.new_tag }}
-          git push origin ${{ needs.create-new-tag.outputs.new_tag }}
+#   update-toml:
+#     needs: 
+#       - create-new-tag
+#       - delete-tag
+#     if: ${{ needs.create-new-tag.outputs.new_tag }}
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: checkout
+#         uses: actions/checkout@v2.4.0
+# #         with:
+# #           token: ${{ secrets.GH_TOKEN }}
+#       - name: run pwd ls
+#         run: |
+#           pwd
+#           ls -a
+#       - name: edit Toml
+#         uses: ciiiii/toml-editor@1.0.0
+#         with:
+#           file: "pyproject.toml"
+#           key: "tool.poetry.version"
+#           value: ${{ needs.create-new-tag.outputs.new_version }}
+#       - name: check for changes
+#         run: git status
+#       - name: Commit changes
+#         uses: EndBug/add-and-commit@v8
+#         with:
+#           author_name: GitHub Actions
+#           author_email: 41898282+github-actions[bot]@users.noreply.github.com
+#           message: 'Bump version in pyproject.toml'
+#           add: '.'
 
-  create-release:
-    needs:
-      - create-tag-by-command
-      - create-new-tag
-    if: ${{ needs.create-new-tag.outputs.new_tag }}
-    uses: ChJL/workflow-test/.github/workflows/git_release.yml@main
-    secrets:
-      GH_TOKEN: ${{ secrets.GH_TOKEN }}
-    with:
-      TAG: ${{ needs.create-new-tag.outputs.new_tag }}
-      CHANGELOG: ${{ needs.create-new-tag.outputs.changelog }}
+#   create-tag-by-command:
+#      needs: 
+#        - update-toml
+#        - create-new-tag
+#      runs-on: ubuntu-latest
+#      steps:
+#      - name: checkout
+#        uses: actions/checkout@v2.4.0
+#        with:
+#           token: ${{ secrets.GH_TOKEN }}
+#      - name: create tag command
+#        run: |
+#           git tag  ${{ needs.create-new-tag.outputs.new_tag }}
+#           git push origin ${{ needs.create-new-tag.outputs.new_tag }}
+
+#   create-release:
+#     needs:
+#       - create-tag-by-command
+#       - create-new-tag
+#     if: ${{ needs.create-new-tag.outputs.new_tag }}
+#     uses: ChJL/workflow-test/.github/workflows/git_release.yml@main
+#     secrets:
+#       GH_TOKEN: ${{ secrets.GH_TOKEN }}
+#     with:
+#       TAG: ${{ needs.create-new-tag.outputs.new_tag }}
+#       CHANGELOG: ${{ needs.create-new-tag.outputs.changelog }}
 
 #  # another way for commit and push
 #       - name: stage changed files
