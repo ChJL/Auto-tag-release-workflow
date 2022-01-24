@@ -114,8 +114,7 @@ jobs:
     secrets:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
     with:
-      TAG: ${{ needs.create-new-tag.outputs.new_tag }}
-      CHANGELOG: ${{ needs.create-new-tag.outputs.changelog }}
+      TAG: $GIT_TAG
 
 #  # another way for commit and push
 #       - name: stage changed files
