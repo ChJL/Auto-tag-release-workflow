@@ -3,13 +3,8 @@ on:
   push:
     branches: [ main ]
 jobs:
-  check-actor:
-    runs-on: ubuntu-latest
-    steps:
-      - name: check actor
-        run: |
-          echo "Get Github Actor: " ${{github.actor}}
   check-commit-message:
+   if: contains(github.event.head_commit.message, 'Bump version in pyproject.toml')
    runs-on: ubuntu-latest
    steps:
      - name: Checkout
@@ -17,45 +12,39 @@ jobs:
        with:
          fetch-depth: 0
          token: ${{ secrets.GH_TOKEN }}
-     - name: Set output tag
-       id: vars
-#        if: contains(github.event.head_commit.message, 'check commit')
+     - name: Retrieve tag
+       id: taketag
        run: |
          git status
          echo 'check commit message included'
          git describe --tags --abbrev=0
          GIT_TAG=`echo $(git describe --tags --abbrev=0)`
-         echo ::set-output name=tag::${GITHUB_REF#refs/*/}
          echo ::set-output name=tagg::$GIT_TAG
          echo "GIT_TAG=`echo $(git describe --tags --abbrev=0)`" >> $GITHUB_ENV
-     - name: 'Get Previous tag'
-       id: previoustag
-       uses: "WyriHaximus/github-action-get-previous-tag@v1"
      - name: Check output
        run: |
-          echo ${{ steps.previoustag.outputs.tag }}
-          echo $ {{ steps.vars.outputs.tag}}
-          echo $ {{ steps.vars.outputs.tagg}}
+          echo ${{ steps.taketag.outputs.tag}}
+          echo ${{ steps.taketag.outputs.tagg}}
     
-#   create-new-tag:
-#     needs: check-actor
-#     name: 'create_tags'
-#     secrets:
-#       GH_TOKEN: ${{ secrets.GH_TOKEN }}
-#     uses: ChJL/workflow-test/.github/workflows/git_tag.yml@main
+  create-new-tag:
+    if: "!contains(github.event.head_commit.message, 'Bump version in pyproject.toml')"
+    name: 'create_tags'
+    secrets:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+    uses: ChJL/workflow-test/.github/workflows/git_tag.yml@main
 
-#   check-tag-name:
-#     needs: create-new-tag
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Check Output Parameters
-#         run: |
-#           echo "Got tag name ${{ needs.create-new-tag.outputs.new_tag }}"
-#           echo "Got release version ${{ needs.create-new-tag.outputs.new_version }}"
-#           echo "Got previous version ${{ needs.create-new-tag.outputs.previous_version }}"
-#           echo "Got previous tag ${{ needs.create-new-tag.outputs.previous_tag }}"
-#           echo "Got release type ${{ needs.create-new-tag.outputs.release_type }}"
-#           echo "Got changelog ${{ needs.create-new-tag.outputs.changelog }}"
+  check-tag-name:
+    needs: create-new-tag
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Output Parameters
+        run: |
+          echo "Got tag name ${{ needs.create-new-tag.outputs.new_tag }}"
+          echo "Got release version ${{ needs.create-new-tag.outputs.new_version }}"
+          echo "Got previous version ${{ needs.create-new-tag.outputs.previous_version }}"
+          echo "Got previous tag ${{ needs.create-new-tag.outputs.previous_tag }}"
+          echo "Got release type ${{ needs.create-new-tag.outputs.release_type }}"
+          echo "Got changelog ${{ needs.create-new-tag.outputs.changelog }}"
 
 
 # # This section can be used when you want to delete the tag
@@ -72,35 +61,35 @@ jobs:
 #        run: |
 #           git push --delete origin ${{ needs.create-new-tag.outputs.new_tag }}
 
-#   update-toml:
-#     needs: 
-#       - create-new-tag
-#     if: ${{ needs.create-new-tag.outputs.new_tag }}
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: checkout
-#         uses: actions/checkout@v2.4.0
-#         with:
-#           token: ${{ secrets.GH_TOKEN }}
-#       - name: run pwd ls
-#         run: |
-#           pwd
-#           ls -a
-#       - name: edit Toml
-#         uses: ciiiii/toml-editor@1.0.0
-#         with:
-#           file: "pyproject.toml"
-#           key: "tool.poetry.version"
-#           value: ${{ needs.create-new-tag.outputs.new_version }}
-#       - name: check for changes
-#         run: git status
-#       - name: Commit changes
-#         uses: EndBug/add-and-commit@v8
-#         with:
-#           author_name: GitHub Actions
-#           author_email: 41898282+github-actions[bot]@users.noreply.github.com
-#           message: 'Bump version in pyproject.toml'
-#           add: '.'
+  update-toml:
+    needs: 
+      - create-new-tag
+    if: ${{ needs.create-new-tag.outputs.new_tag }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2.4.0
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+      - name: run pwd ls
+        run: |
+          pwd
+          ls -a
+      - name: edit Toml
+        uses: ciiiii/toml-editor@1.0.0
+        with:
+          file: "pyproject.toml"
+          key: "tool.poetry.version"
+          value: ${{ needs.create-new-tag.outputs.new_version }}
+      - name: check for changes
+        run: git status
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v8
+        with:
+          author_name: GitHub Actions
+          author_email: 41898282+github-actions[bot]@users.noreply.github.com
+          message: 'Bump version in pyproject.toml'
+          add: '.'
 
 #   create-tag-by-command:
 #      needs: 
@@ -117,16 +106,16 @@ jobs:
 #           git tag  ${{ needs.create-new-tag.outputs.new_tag }}
 #           git push origin ${{ needs.create-new-tag.outputs.new_tag }}
 
-#   create-release:
-#     needs:
-#       - create-new-tag
-#     if: ${{ needs.create-new-tag.outputs.new_tag }}
-#     uses: ChJL/workflow-test/.github/workflows/git_release.yml@main
-#     secrets:
-#       GH_TOKEN: ${{ secrets.GH_TOKEN }}
-#     with:
-#       TAG: ${{ needs.create-new-tag.outputs.new_tag }}
-#       CHANGELOG: ${{ needs.create-new-tag.outputs.changelog }}
+  create-release:
+    needs:
+      - check-commit-message
+    if: contains(github.event.head_commit.message, 'Bump version in pyproject.toml')
+    uses: ChJL/workflow-test/.github/workflows/git_release.yml@main
+    secrets:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+    with:
+      TAG: ${{ needs.create-new-tag.outputs.new_tag }}
+      CHANGELOG: ${{ needs.create-new-tag.outputs.changelog }}
 
 #  # another way for commit and push
 #       - name: stage changed files
