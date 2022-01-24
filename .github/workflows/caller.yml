@@ -12,32 +12,40 @@ jobs:
   check-commit-message:
    runs-on: ubuntu-latest
    steps:
-     - name: Run commit tests
+     - name: Checkout
+       uses: actions/checkout@v2
+     - name: Set output tag
+       id: vars
        if: contains(github.event.head_commit.message, 'check commit')
        run: |
-         echo 'Running check commit test!'
-         echo "GIT_TAG=`echo $(git describe --tags --abbrev=0)`" >> $GITHUB_ENV
-         echo ${{GIT_TAG}}
+         echo 'check commit message included'
+         echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+     - name: Check output
+       env:
+          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+       run: |
+          echo $RELEASE_VERSION
+          echo ${{ steps.vars.outputs.tag }}
     
-  create-new-tag:
-    needs: check-actor
-    name: 'create_tags'
-    secrets:
-      GH_TOKEN: ${{ secrets.GH_TOKEN }}
-    uses: ChJL/workflow-test/.github/workflows/git_tag.yml@main
+#   create-new-tag:
+#     needs: check-actor
+#     name: 'create_tags'
+#     secrets:
+#       GH_TOKEN: ${{ secrets.GH_TOKEN }}
+#     uses: ChJL/workflow-test/.github/workflows/git_tag.yml@main
 
-  check-tag-name:
-    needs: create-new-tag
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check Output Parameters
-        run: |
-          echo "Got tag name ${{ needs.create-new-tag.outputs.new_tag }}"
-          echo "Got release version ${{ needs.create-new-tag.outputs.new_version }}"
-          echo "Got previous version ${{ needs.create-new-tag.outputs.previous_version }}"
-          echo "Got previous tag ${{ needs.create-new-tag.outputs.previous_tag }}"
-          echo "Got release type ${{ needs.create-new-tag.outputs.release_type }}"
-          echo "Got changelog ${{ needs.create-new-tag.outputs.changelog }}"
+#   check-tag-name:
+#     needs: create-new-tag
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Check Output Parameters
+#         run: |
+#           echo "Got tag name ${{ needs.create-new-tag.outputs.new_tag }}"
+#           echo "Got release version ${{ needs.create-new-tag.outputs.new_version }}"
+#           echo "Got previous version ${{ needs.create-new-tag.outputs.previous_version }}"
+#           echo "Got previous tag ${{ needs.create-new-tag.outputs.previous_tag }}"
+#           echo "Got release type ${{ needs.create-new-tag.outputs.release_type }}"
+#           echo "Got changelog ${{ needs.create-new-tag.outputs.changelog }}"
 
 
 # # This section can be used when you want to delete the tag
