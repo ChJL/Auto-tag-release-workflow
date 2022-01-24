@@ -16,6 +16,7 @@ jobs:
        if: contains(github.event.head_commit.message, 'check commit')
        run: |
          echo 'Running check commit test!'
+         echo 'Tag: ${{github.ref_name}}'
     
   create-new-tag:
     needs: check-actor
@@ -55,14 +56,13 @@ jobs:
 #   update-toml:
 #     needs: 
 #       - create-new-tag
-#       - delete-tag
 #     if: ${{ needs.create-new-tag.outputs.new_tag }}
 #     runs-on: ubuntu-latest
 #     steps:
 #       - name: checkout
 #         uses: actions/checkout@v2.4.0
-# #         with:
-# #           token: ${{ secrets.GH_TOKEN }}
+#         with:
+#           token: ${{ secrets.GH_TOKEN }}
 #       - name: run pwd ls
 #         run: |
 #           pwd
@@ -100,7 +100,6 @@ jobs:
 
 #   create-release:
 #     needs:
-#       - create-tag-by-command
 #       - create-new-tag
 #     if: ${{ needs.create-new-tag.outputs.new_tag }}
 #     uses: ChJL/workflow-test/.github/workflows/git_release.yml@main
