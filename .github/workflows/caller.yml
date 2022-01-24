@@ -16,7 +16,8 @@ jobs:
        if: contains(github.event.head_commit.message, 'check commit')
        run: |
          echo 'Running check commit test!'
-         echo 'Tag: ${{github.ref_name}}'
+         echo "GIT_TAG=`echo $(git describe --tags --abbrev=0)`" >> $GITHUB_ENV
+         echo ${{GIT_TAG}}
     
   create-new-tag:
     needs: check-actor
