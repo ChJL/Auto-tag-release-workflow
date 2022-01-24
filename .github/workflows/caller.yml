@@ -21,15 +21,18 @@ jobs:
 #        if: contains(github.event.head_commit.message, 'check commit')
        run: |
          git status
-         echo 'check commit message included'
-         git describe --tags --abbrev=0
-         GIT_TAG=`echo $(git describe --tags --abbrev=0)`
-         echo ::set-output name=tag::${GITHUB_REF#refs/*/}
-         echo ::set-output name=tagg::$GIT_TAG
+#         echo 'check commit message included'
+#         git describe --tags --abbrev=0
+#         GIT_TAG=`echo $(git describe --tags --abbrev=0)`
+#         echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+#         echo ::set-output name=tagg::$GIT_TAG
 #         echo "GIT_TAG=`echo $(git describe --tags --abbrev=0)`" >> $GITHUB_ENV
+     - name: 'Get Previous tag'
+       id: previoustag
+       uses: "WyriHaximus/github-action-get-previous-tag@v1"
      - name: Check output
        run: |
-          echo ${{ steps.vars.outputs.tagg }}
+          echo ${{ steps.previoustag.outputs.tag }}
     
 #   create-new-tag:
 #     needs: check-actor
