@@ -31,8 +31,8 @@ jobs:
     steps:
       - name: check tag name
         run: |
-          echo ${{needs.check-commit-message.steps.taketag.outputs.tagg}}
-          echo ${{jobs.taketag.outputs.tagg}}
+          echo ${{needs.check-commit-message.taketag.outputs.tagg}}
+          echo ${{jobs.check-commit-message.taketag.outputs.tagg}}
           echo ${{env.GIT_TAG}}
     
 #   create-new-tag:
