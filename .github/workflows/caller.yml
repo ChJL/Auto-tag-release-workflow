@@ -13,25 +13,23 @@ jobs:
    runs-on: ubuntu-latest
    steps:
      - name: Checkout
-       uses: actions/checkout@v2
+       uses: actions/checkout@v2.4.0
        with:
          token: ${{ secrets.GH_TOKEN }}
      - name: Set output tag
        id: vars
-       if: contains(github.event.head_commit.message, 'check commit')
+#        if: contains(github.event.head_commit.message, 'check commit')
        run: |
+         git status
          echo 'check commit message included'
          git describe --tags --abbrev=0
          GIT_TAG=`echo $(git describe --tags --abbrev=0)`
          echo ::set-output name=tag::${GITHUB_REF#refs/*/}
-         echo ::set-output name=tag2::$GIT_TAG
+         echo ::set-output name=tagg::$GIT_TAG
 #         echo "GIT_TAG=`echo $(git describe --tags --abbrev=0)`" >> $GITHUB_ENV
      - name: Check output
-       env:
-          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
        run: |
-          echo $RELEASE_VERSION
-          echo ${{ steps.vars.outputs.tag2 }}
+          echo ${{ steps.vars.outputs.tagg }}
     
 #   create-new-tag:
 #     needs: check-actor
