@@ -4,6 +4,8 @@ on:
     branches: [ main ]
 jobs:
   check-commit-message:
+   outputs:
+      tag: ${{steps.taketag.output.tagg}}
    if: contains(github.event.head_commit.message, 'Bump version in pyproject.toml')
    runs-on: ubuntu-latest
    steps:
@@ -31,8 +33,7 @@ jobs:
     steps:
       - name: check tag name
         run: |
-          echo ${{needs.check-commit-message.taketag.outputs.tagg}}
-          echo ${{jobs.check-commit-message.taketag.outputs.tagg}}
+          echo ${{needs.check-commit-message.outputs.tag}}
           echo ${{env.GIT_TAG}}
     
 #   create-new-tag:
