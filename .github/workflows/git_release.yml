@@ -7,9 +7,9 @@ on:
       TAG:
         type: string
         required: true
-      CHANGELOG:
-        type: string
-        required: true
+#       CHANGELOG:
+#         type: string
+#         required: true
 
 jobs:
   git-release:
