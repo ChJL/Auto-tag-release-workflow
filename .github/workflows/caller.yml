@@ -24,7 +24,7 @@ jobs:
      - name: Check output
        run: |
           echo ${{ steps.taketag.outputs.tagg}}
-          echo ${{GIT_TAG}}
+          echo ${{env.GIT_TAG}}
   check-tag:
     needs: check-commit-message
     runs-on: ubuntu-latest
