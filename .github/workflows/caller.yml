@@ -14,11 +14,14 @@ jobs:
    steps:
      - name: Checkout
        uses: actions/checkout@v2
+       with:
+         token: ${{ secrets.GH_TOKEN }}
      - name: Set output tag
        id: vars
        if: contains(github.event.head_commit.message, 'check commit')
        run: |
          echo 'check commit message included'
+         git describe --tags --abbrev=0
          GIT_TAG=`echo $(git describe --tags --abbrev=0)`
          echo ::set-output name=tag::${GITHUB_REF#refs/*/}
          echo ::set-output name=tag2::$GIT_TAG
