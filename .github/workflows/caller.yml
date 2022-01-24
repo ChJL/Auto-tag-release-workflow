@@ -19,7 +19,7 @@ jobs:
        if: contains(github.event.head_commit.message, 'check commit')
        run: |
          echo 'check commit message included'
-         echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+         echo ::set-output name=tag::${GITHUB_REF:10}
      - name: Check output
        env:
           RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
