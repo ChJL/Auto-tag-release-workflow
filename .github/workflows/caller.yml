@@ -102,7 +102,7 @@ jobs:
      needs: 
      - check-commit-message
      - simulate-push-to-ecr
-     if: "always() && (needs.simulate-push-to-ecr.outputs.job_status != 'success')"
+     if: "always() && (needs.simulate-push-to-ecr.result == 'failure')"
      runs-on: ubuntu-latest
      steps:
      - name: checkout
