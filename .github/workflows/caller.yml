@@ -27,20 +27,32 @@ jobs:
        run: |
           echo ${{ steps.taketag.outputs.tagg}}
           echo ${{env.GIT_TAG}}
-  check-tag:
-    needs: check-commit-message
+    
+  compute-tag:
     runs-on: ubuntu-latest
     steps:
-      - name: check tag name
-        run: |
-          echo ${{needs.check-commit-message.outputs.tag}}
+      - name: compute tag
+        id: computetag
+        uses: craig-day/compute-tag@v10
+        with:
+          github_token: ${{ secrets.GH_TOKEN }}
+          version_type: patch
     
-  create-new-tag:
-    if: "!contains(github.event.head_commit.message, 'Bump version in pyproject.toml')"
-    name: 'create_tags'
-    secrets:
-      GH_TOKEN: ${{ secrets.GH_TOKEN }}
-    uses: ChJL/workflow-test/.github/workflows/git_tag.yml@main
+    
+#   check-tag:
+#     needs: check-commit-message
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: check tag name
+#         run: |
+#           echo ${{needs.check-commit-message.outputs.tag}}
+    
+#   create-new-tag:
+#     if: "!contains(github.event.head_commit.message, 'Bump version in pyproject.toml')"
+#     name: 'create_tags'
+#     secrets:
+#       GH_TOKEN: ${{ secrets.GH_TOKEN }}
+#     uses: ChJL/workflow-test/.github/workflows/git_tag.yml@main
 
 #   check-tag-name:
 #     needs: create-new-tag
@@ -70,35 +82,35 @@ jobs:
 #        run: |
 #           git push --delete origin ${{ needs.create-new-tag.outputs.new_tag }}
 
-  update-toml:
-    needs: 
-      - create-new-tag
-    if: ${{ needs.create-new-tag.outputs.new_tag }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: checkout
-        uses: actions/checkout@v2.4.0
-        with:
-          token: ${{ secrets.GH_TOKEN }}
-      - name: run pwd ls
-        run: |
-          pwd
-          ls -a
-      - name: edit Toml
-        uses: ciiiii/toml-editor@1.0.0
-        with:
-          file: "pyproject.toml"
-          key: "tool.poetry.version"
-          value: ${{ needs.create-new-tag.outputs.new_version }}
-      - name: check for changes
-        run: git status
-      - name: Commit changes
-        uses: EndBug/add-and-commit@v8
-        with:
-          author_name: GitHub Actions
-          author_email: 41898282+github-actions[bot]@users.noreply.github.com
-          message: 'Bump version in pyproject.toml'
-          add: '.'
+#   update-toml:
+#     needs: 
+#       - create-new-tag
+#     if: ${{ needs.create-new-tag.outputs.new_tag }}
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: checkout
+#         uses: actions/checkout@v2.4.0
+#         with:
+#           token: ${{ secrets.GH_TOKEN }}
+#       - name: run pwd ls
+#         run: |
+#           pwd
+#           ls -a
+#       - name: edit Toml
+#         uses: ciiiii/toml-editor@1.0.0
+#         with:
+#           file: "pyproject.toml"
+#           key: "tool.poetry.version"
+#           value: ${{ needs.create-new-tag.outputs.new_version }}
+#       - name: check for changes
+#         run: git status
+#       - name: Commit changes
+#         uses: EndBug/add-and-commit@v8
+#         with:
+#           author_name: GitHub Actions
+#           author_email: 41898282+github-actions[bot]@users.noreply.github.com
+#           message: 'Bump version in pyproject.toml'
+#           add: '.'
 
 #   create-tag-by-command:
 #      needs: 
@@ -115,15 +127,15 @@ jobs:
 #           git tag  ${{ needs.create-new-tag.outputs.new_tag }}
 #           git push origin ${{ needs.create-new-tag.outputs.new_tag }}
 
-  create-release:
-    needs:
-      - check-commit-message
-    if: contains(github.event.head_commit.message, 'Bump version in pyproject.toml')
-    uses: ChJL/workflow-test/.github/workflows/git_release.yml@main
-    secrets:
-        GH_TOKEN: ${{ secrets.GH_TOKEN }}
-    with:
-        TAG: ${{needs.check-commit-message.outputs.tag}}
+#   create-release:
+#     needs:
+#       - check-commit-message
+#     if: contains(github.event.head_commit.message, 'Bump version in pyproject.toml')
+#     uses: ChJL/workflow-test/.github/workflows/git_release.yml@main
+#     secrets:
+#         GH_TOKEN: ${{ secrets.GH_TOKEN }}
+#     with:
+#         TAG: ${{needs.check-commit-message.outputs.tag}}
 
         
 #  # another way for commit and push
