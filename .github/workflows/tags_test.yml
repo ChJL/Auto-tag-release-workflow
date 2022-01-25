@@ -9,5 +9,4 @@ jobs:
   git-release:
     runs-on: ubuntu-latest
     steps:
-      - name: Create a GitHub release
       - run: echo "Nice to meet you!"
