@@ -111,7 +111,7 @@ jobs:
           token: ${{ secrets.GH_TOKEN }}
      - name: delete tag command
        run: |
-          git push --delete origin ${{ needs.create-new-tag.outputs.new_tag }}
+          git push --delete origin ${{needs.check-commit-message.outputs.tag}}
         
 #   check-tag:
 #     needs: check-commit-message
