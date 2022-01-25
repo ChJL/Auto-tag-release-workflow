@@ -1,5 +1,5 @@
 [tool.poetry]
 name = "auto-tag-release-workflow"
-version = "0.3.3"
+version = "0.3.4"
 description = ""
 authors = [ "ChJL" ]
