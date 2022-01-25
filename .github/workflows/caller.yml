@@ -33,7 +33,7 @@ jobs:
       - name: Update tag
         uses: richardsimko/update-tag@v1
         with:
-          tag_name: ${ { needs.check-commit-message.outputs.tag } }
+          tag_name: ${{ needs.check-commit-message.outputs.tag}}
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 #   check-tag:
