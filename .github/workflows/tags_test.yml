@@ -1,0 +1,13 @@
+name: Publish in GitHub Package Registry
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  git-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create a GitHub release
+      - run: echo "Nice to meet you!"
