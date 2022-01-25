@@ -6,7 +6,7 @@ jobs:
   check-commit-message:
     outputs:
       tag: ${{steps.taketag.outputs.tag}}
-    if: contains(github.event.head_commit.message, 'Bump version in pyproject.toml')
+    #if: contains(github.event.head_commit.message, 'Bump version in pyproject.toml')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -27,11 +27,13 @@ jobs:
 
   compute-tag:
     runs-on: ubuntu-latest
+    needs:
+      - check-commit-message
     steps:
       - name: Update tag
         uses: richardsimko/update-tag@v1
         with:
-          tag_name: name-of-tag
+          tag_name: ${ { needs.check-commit-message.outputs.tag } }
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
 #   check-tag:
