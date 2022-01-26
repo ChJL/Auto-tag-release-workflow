@@ -77,7 +77,8 @@ jobs:
     steps:
       - name: Simulate succeess or failure
         run: |
-         echo "sucesss task"
+         echo "sucesss failure"
+         git describe --tags --abbrev=0
 
 
   create-release:
@@ -108,7 +109,23 @@ jobs:
      - name: delete tag command
        run: |
           git push --delete origin ${{needs.check-commit-message.outputs.tag}}
-        
+  
+  undo-push:
+    needs:
+    - delete-tag
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+           ref: ${{ github.event.inputs.branch }}
+           fetch-depth: 0 
+      - name: Undo Push
+        uses: exions/undo-push@v1
+        with:
+          branch: ${{ github.event.inputs.branch }}
+  
+      
 #   check-tag:
 #     needs: check-commit-message
 #     runs-on: ubuntu-latest
