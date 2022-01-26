@@ -130,7 +130,7 @@ jobs:
         run: |
           git describe --tags --abbrev=0
           GIT_TAG=`echo $(git describe --tags --abbrev=0)`
-          echo ::set-output name=version::${{GIT_TAG:1}}
+          echo ::set-output name=version::${GIT_TAG:1}
           
   check-version:
     needs: get-version
