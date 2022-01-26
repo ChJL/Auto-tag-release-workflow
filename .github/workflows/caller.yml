@@ -81,7 +81,7 @@ jobs:
     steps:
       - name: Simulate succeess or failure
         run: |
-          git describe --tags --abbrrev=0
+         echo "sucesss task"
 
 
   create-release:
