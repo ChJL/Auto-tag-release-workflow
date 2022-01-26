@@ -20,7 +20,7 @@ jobs:
         run: |
           pip install toml-cli
           toml get --toml-path pyproject.toml tool.poetry.name
-          toml set --toml-path pyproject.toml tool.poetry.version 0.2.1
+          toml set --toml-path pyproject.toml tool.poetry.version 0.2.5
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: Update pyproject version
