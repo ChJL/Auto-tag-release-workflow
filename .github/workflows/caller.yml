@@ -78,8 +78,8 @@ jobs:
     steps:
       - name: Simulate succeess or failure
         run: |
-         echo "ecr failure!"
-         git describe --tags --abbrev=0
+         echo "ecr success!"
+
 
 
   create-release:
