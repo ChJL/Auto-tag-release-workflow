@@ -16,6 +16,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.GH_TOKEN }}
       - name: Create a GitHub release
         if: ${{ inputs.TAG }}
         # Only if we have new tag(version), release the new version.
