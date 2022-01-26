@@ -110,22 +110,59 @@ jobs:
        run: |
           git push --delete origin ${{needs.check-commit-message.outputs.tag}}
   
-  undo-push:
+  get-version:
     needs:
     - delete-tag
+    outputs:
+      version: ${{steps.getversion.outputs.version-without-v}}
     if: "always() && (needs.delete-tag.result == 'success')"
     runs-on: ubuntu-latest
-    steps: 
-      - name: Checkout
-        uses: actions/checkout@v2
+    steps:
+      - id: getversion
+        uses: battila7/get-version-action@v2
+
+  re-update-pyproject:
+    needs:
+    - get-version
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2.4.0
+      - name: edit Toml
+        uses: ciiiii/toml-editor@1.0.0
         with:
-           ref: ${{ github.event.inputs.branch }}
-           fetch-depth: 0
-           token: ${{ secrets.GH_TOKEN }}
-      - name: Undo Push
-        uses: exions/undo-push@v1
+          file: "pyproject.toml"
+          key: "tool.poetry.version"
+          value: ${{ needs.get-version.outputs.version }}
+      - name: check for changes
+        run: git status
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v8
         with:
-          branch: ${{ github.event.inputs.branch }}
+          author_name: GitHub Actions
+          author_email: 41898282+github-actions[bot]@users.noreply.github.com
+          message: 'Reverse version in pyproject.toml'
+          add: '.'
+    
+    
+    
+
+#   undo-push:
+#     needs:
+#     - delete-tag
+#     if: "always() && (needs.delete-tag.result == 'success')"
+#     runs-on: ubuntu-latest
+#     steps: 
+#       - name: Checkout
+#         uses: actions/checkout@v2
+#         with:
+#            ref: ${{ github.event.inputs.branch }}
+#            fetch-depth: 0
+#            token: ${{ secrets.GH_TOKEN }}
+#       - name: Undo Push
+#         uses: exions/undo-push@v1
+#         with:
+#           branch: ${{ github.event.inputs.branch }}
   
       
 #   check-tag:
