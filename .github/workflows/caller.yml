@@ -130,7 +130,7 @@ jobs:
         run: |
           git describe --tags --abbrev=0
           GIT_TAG=`echo $(git describe --tags --abbrev=0)`
-          echo ::set-output name=version::${GIT_TAG:1}
+          echo ::set-output name=version::$GIT_TAG
           
   check-version:
     needs: get-version
@@ -138,7 +138,7 @@ jobs:
     steps:
       - name: check version
         run: |
-          echo ${{needs.getversion.outputs.version}}
+          echo ${{needs.getversion.outputs.version}}:1
 
 #   re-update-pyproject:
 #     needs:
