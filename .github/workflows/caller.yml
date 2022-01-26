@@ -77,7 +77,8 @@ jobs:
     steps:
       - name: Simulate succeess or failure
         run: |
-         echo "ecr sucess"
+         echo "ecr failure"
+         git describe --tags --abbrev=0
 
 
   create-release:
