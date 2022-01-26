@@ -77,8 +77,7 @@ jobs:
     steps:
       - name: Simulate succeess or failure
         run: |
-         echo "sucesss failure"
-         git describe --tags --abbrev=0
+         echo "sucess"
 
 
   create-release:
@@ -113,6 +112,7 @@ jobs:
   undo-push:
     needs:
     - delete-tag
+    if: "always() && (needs.delete-tag.result == 'success')"
     runs-on: ubuntu-latest
     steps: 
       - name: Checkout
