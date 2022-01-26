@@ -35,8 +35,8 @@ jobs:
           commit_message: Update pyproject version
       - uses: ncipollo/release-action@v1
         with:
-          tag: ${{ inputs.TAG }}
-          name: Release ${{ inputs.TAG }}
+          tag: ${{ needs.create-new-tag.outputs.new_version }}
+          name: Release ${{ needs.create-new-tag.outputs.new_version }}
 
   simulate-push-to-ecr:
     needs:
