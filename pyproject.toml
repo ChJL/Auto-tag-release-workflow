@@ -1,5 +1,8 @@
 [tool.poetry]
 name = "auto-tag-release-workflow"
-version = "main"
+version = "0.2.0"
 description = ""
 authors = [ "ChJL" ]
+[tool.poetry.dependencies]
+python = "^3.7"
+toml-cli = "^0.1.3"
