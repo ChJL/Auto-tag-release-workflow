@@ -119,12 +119,20 @@ jobs:
     if: "always() && (needs.delete-tag.result == 'success')"
     runs-on: ubuntu-latest
     steps:
+      - name: checkout
+        uses: actions/checkout@v2.4.0
+        with:
+          token: ${{ secrets.GH_TOKEN }}
       - id: getversion
         uses: battila7/get-version-action@v2
+      - name: check output 
+        run: |
+          echo ${{ steps.getversion.outputs.version-without-v }}
 
   re-update-pyproject:
     needs:
     - get-version
+    if: "always() && (needs.get-version.result == 'success')"
     runs-on: ubuntu-latest
     steps:
       - name: checkout
