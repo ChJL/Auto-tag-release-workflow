@@ -77,7 +77,7 @@ jobs:
     steps:
       - name: Simulate succeess or failure
         run: |
-         echo "sucess"
+         echo "ecr sucess"
 
 
   create-release:
