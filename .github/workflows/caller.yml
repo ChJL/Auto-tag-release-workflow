@@ -70,6 +70,7 @@ jobs:
           tag_name: ${{ needs.check-commit-message.outputs.tag}}
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          
   simulate-push-to-ecr:
     needs:
       - update-tag
