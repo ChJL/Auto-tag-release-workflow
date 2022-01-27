@@ -55,7 +55,7 @@ jobs:
     needs:
       - simulate-push-to-ecr
       - create-new-tag
-    if: "always() || (needs.simulate-push-to-ecr.result == 'failure')"
+    if: "always() || (needs.simulate-push-to-ecr.result == 'failure') && ${{needs.create-new-tag.outputs.new_tag}}"
     runs-on: ubuntu-latest
     steps:
       - name: checkout
