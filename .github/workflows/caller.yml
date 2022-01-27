@@ -10,33 +10,6 @@ jobs:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
     uses: ChJL/workflow-test/.github/workflows/git_tag.yml@main
 
-#   update-version:
-#     name: Update version
-#     needs: create-new-tag
-#     runs-on: ubuntu-latest
-#     steps:
-#       - name: Set up Python 3.7
-#         uses: actions/setup-python@v1
-#         with:
-#           python-version: '3.7'
-
-#       - uses: actions/checkout@v2
-#         with:
-#           ref: ${{ github.head_ref }}
-
-#       - name: toml-cli
-#         run: |
-#           pip install toml-cli
-#           toml get --toml-path pyproject.toml tool.poetry.name
-#           toml set --toml-path pyproject.toml tool.poetry.version ${{ needs.create-new-tag.outputs.new_version}}
-
-#       - uses: stefanzweifel/git-auto-commit-action@v4
-#         with:
-#           commit_message: Update pyproject version
-#       - uses: ncipollo/release-action@v1
-#         with:
-#           tag: ${{ needs.create-new-tag.outputs.new_version }}
-#           name: Release ${{ needs.create-new-tag.outputs.new_version }}
 
   simulate-push-to-ecr:
     needs:
@@ -45,7 +18,8 @@ jobs:
     steps:
       - name: Simulate succeess or failure
         run: |
-          echo "ecr success!"
+          echo "ecr fail!"
+          exit 1
 
 
   delete-tag:
