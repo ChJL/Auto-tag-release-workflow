@@ -45,7 +45,8 @@ jobs:
     steps:
       - name: Simulate succeess or failure
         run: |
-          echo "ecr sucess!"
+          echo "ecr fails!"
+          exit 1
 
 
   # # This section can be used when you want to delete the tag
