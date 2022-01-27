@@ -68,6 +68,8 @@ jobs:
   create-release:
     needs:
       - create-new-tag
+      - simulate-push-to-ecr
+      - delete-tag
     runs-on: ubuntu-latest
     steps:
       - name: Set up Python 3.7
