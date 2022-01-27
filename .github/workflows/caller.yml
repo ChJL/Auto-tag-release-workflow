@@ -72,7 +72,7 @@ jobs:
       - create-new-tag
       - simulate-push-to-ecr
       - delete-tag
-    if: "(needs.simulate-push-to-ecr.result == 'success') && ${{needs.create-new-tag.outputs.new_tag}"
+    if: "(needs.simulate-push-to-ecr.result == 'success') && (${{needs.create-new-tag.outputs.new_tag})"
     runs-on: ubuntu-latest
     steps:
       - name: Set up Python 3.7
