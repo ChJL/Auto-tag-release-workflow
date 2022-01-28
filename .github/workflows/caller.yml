@@ -44,30 +44,9 @@ jobs:
       - simulate-push-to-ecr
       - delete-tag
     if: "(needs.simulate-push-to-ecr.result == 'success') && (needs.create-new-tag.outputs.new_tag != '')"
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set up Python 3.7
-        uses: actions/setup-python@v1
-        with:
-          python-version: '3.7'
-
-      - uses: actions/checkout@v2
-        with:
-          ref: ${{ github.head_ref }}
-
-      - name: toml-cli
-        run: |
-          pip install toml-cli
-          toml get --toml-path pyproject.toml tool.poetry.name
-          toml set --toml-path pyproject.toml tool.poetry.version ${{ needs.create-new-tag.outputs.new_version}}
-      
-
-      - uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: Update pyproject version
-          
-      - uses: ncipollo/release-action@v1
-        with:
-          tag: ${{ needs.create-new-tag.outputs.new_tag }}
-          name: Release ${{ needs.create-new-tag.outputs.new_version }}
-          body: ${{ needs.create-new-tag.outputs.changelog }}
+    uses: ChJL/workflow-test/.github/workflows/git_release.yml@main
+    with:
+      TAG: ${{ needs.create-new-tag.outputs.new_tag }}
+      CHANGELOG: ${{ needs.create-new-tag.outputs.changelog }}
+    secrets:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}

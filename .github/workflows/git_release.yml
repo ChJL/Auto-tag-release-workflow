@@ -15,10 +15,27 @@ jobs:
   git-release:
     runs-on: ubuntu-latest
     steps:
+      # For update pyproject.toml
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v1
+        with:
+          python-version: '3.7'
+
       - uses: actions/checkout@v2
         with:
           ref: ${{ github.head_ref }}
-          token: ${{ secrets.GH_TOKEN }}
+
+      - name: toml-cli
+        run: |
+          pip install toml-cli
+          toml get --toml-path pyproject.toml tool.poetry.name
+          toml set --toml-path pyproject.toml tool.poetry.version ${{ needs.create-new-tag.outputs.new_version}}
+
+      # commit the update
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Update pyproject version
+
       - name: Create a GitHub release
         if: ${{ inputs.TAG }}
         # Only if we have new tag(version), release the new version.
